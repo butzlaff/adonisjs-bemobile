@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bemobile
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql-network
+networks:
+  mysql-network:
+    driver: bridge
