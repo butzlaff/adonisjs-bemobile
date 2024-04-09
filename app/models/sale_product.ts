@@ -1,21 +1,26 @@
 import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
 import type { HasOne } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
-import Address from './address.js'
+import Product from './product.js'
+import Sale from './sale.js'
 
-export default class Client extends BaseModel {
+export default class SaleProduct extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare name: string
+  declare quantity: number
 
   @column()
-  declare cpf: string
+  declare price: number
 
-  @hasOne(() => Address, { foreignKey: 'addressId' })
+  @hasOne(() => Sale)
   @column()
-  declare addressId: HasOne<typeof Address>
+  declare saleId: HasOne<typeof Sale>
+
+  @hasOne(() => Product)
+  @column()
+  declare productId: HasOne<typeof Product>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
