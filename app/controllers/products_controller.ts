@@ -1,3 +1,4 @@
+import Product from '#models/product'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ProductsController {
@@ -5,7 +6,8 @@ export default class ProductsController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    return 'ok'
+    const products = Product.all()
+    return products
   }
 
   /**

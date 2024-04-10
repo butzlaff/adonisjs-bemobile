@@ -1,3 +1,4 @@
+import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class UsersController {
@@ -5,21 +6,27 @@ export default class UsersController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    return 'ok'
+    return await User.all()
   }
 
   /**
    * Handle form submission for the create action
    */
   async store({ request }: HttpContext) {
-    return { request }
+    const { email, password } = request.only(['email', 'password'])
+    const user = User.create({
+      email,
+      password,
+    })
+    return user
   }
 
   /**
    * Show individual record
    */
   async show({ params }: HttpContext) {
-    return { params }
+    const user = User.findOrFail(params.id)
+    return user
   }
 
   /**
@@ -32,7 +39,25 @@ export default class UsersController {
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {
-    return { params }
+  async destroy({ params, response }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    if (user) {
+      await user.delete()
+      return response.noContent()
+    }
+    return response.abort('User not found', 404)
+  }
+
+  async login({ request, response, auth }: HttpContext) {
+    const { email, password } = request.only(['email', 'password'])
+    const user = await User.findBy('email', email)
+    if (user) {
+      await User.verifyCredentials(email, password)
+
+      const token = auth.use('jwt').generate(user)
+
+      return token
+    }
+    return response.send({ error: 'Invalid credentials' })
   }
 }

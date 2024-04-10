@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 const UsersController = () => import('#controllers/users_controller')
 const AdressesController = () => import('#controllers/adresses_controller')
 const ClientsController = () => import('#controllers/clients_controller')
@@ -20,7 +21,12 @@ router.get('/', async () => {
   }
 })
 
-router.resource('users', UsersController).except(['create', 'edit'])
+router
+  .resource('users', UsersController)
+  .except(['create', 'edit'])
+  .use(['index'], middleware.auth())
+router.post('login', [UsersController, 'login'])
+
 router.resource('clients', ClientsController).except(['create', 'edit'])
 router.resource('products', ProductsController).except(['create', 'edit'])
 router.resource('sales', SalesController).except(['create', 'edit'])
