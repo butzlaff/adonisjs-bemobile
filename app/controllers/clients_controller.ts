@@ -1,3 +1,4 @@
+import Client from '#models/client'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ClientsController {
@@ -5,7 +6,8 @@ export default class ClientsController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    return 'ok'
+    const clients = Client.all()
+    return clients
   }
 
   /**
