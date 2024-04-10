@@ -6,15 +6,17 @@ export default class ProductsController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    const products = Product.all()
+    const products = await Product.all()
     return products
   }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {
-    return { request }
+  async store({ request, response }: HttpContext) {
+    const product = request.only(['name', 'price', 'description', 'image', 'stock'])
+    const newProduct = await Product.create(product)
+    return response.created(newProduct)
   }
 
   /**

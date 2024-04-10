@@ -24,10 +24,20 @@ router.get('/', async () => {
 router
   .resource('users', UsersController)
   .except(['create', 'edit'])
-  .use(['index'], middleware.auth())
+  .use(['index', 'destroy', 'show', 'update'], middleware.auth())
+
 router.post('login', [UsersController, 'login'])
 
 router.resource('clients', ClientsController).except(['create', 'edit'])
-router.resource('products', ProductsController).except(['create', 'edit'])
-router.resource('sales', SalesController).except(['create', 'edit'])
-router.resource('adresses', AdressesController).except(['create', 'edit'])
+
+router
+  .resource('products', ProductsController)
+  .except(['create', 'edit'])
+  .use('*', middleware.auth())
+
+router.resource('sales', SalesController).except(['create', 'edit']).use('*', middleware.auth())
+
+router
+  .resource('adresses', AdressesController)
+  .except(['create', 'edit'])
+  .use('*', middleware.auth())
