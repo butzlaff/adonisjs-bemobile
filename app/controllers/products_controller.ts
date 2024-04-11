@@ -22,21 +22,40 @@ export default class ProductsController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {
-    return { params }
+  async show({ params, response }: HttpContext) {
+    const productId = params.id
+
+    const product = await Product.find(productId)
+    if (product) return product
+    return response.notFound({ message: 'Product not found' })
   }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {
-    return { params, request }
+  async update({ params, request, response }: HttpContext) {
+    const productId = Number(params.id)
+
+    const product = await Product.find(productId)
+    if (!product) return response.notFound({ message: 'User not found' })
+
+    const body = request.only(['name', 'price', 'description', 'image', 'stock'])
+
+    await product?.merge(body).save()
+
+    return response.send(product)
   }
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {
-    return { params }
+  async destroy({ params, response }: HttpContext) {
+    const productId = Number(params.id)
+
+    const product = await Product.find(productId)
+    if (!product) return response.notFound({ message: 'Product not found' })
+
+    await product.delete()
+    return response.noContent()
   }
 }
