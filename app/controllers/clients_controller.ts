@@ -14,8 +14,9 @@ export default class ClientsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const client = request.only(['name', 'cpf', 'addressId'])
+    const { address, ...client } = request.only(['name', 'cpf', 'address'])
     const newClient = await Client.create(client)
+    if (address) newClient.related('address').create(address)
     return response.created(newClient)
   }
 
@@ -38,7 +39,7 @@ export default class ClientsController {
         q.preload('products')
       })
       .orderBy('id', 'asc')
-      .firstOrFail() // assuming you want to return a single client, hence firstOrFail()
+      .firstOrFail()
 
     return client
   }
@@ -46,8 +47,24 @@ export default class ClientsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {
-    return { params, request }
+  async update({ params, request, response }: HttpContext) {
+    const clientId = Number(params.id)
+
+    const client = await Client.find(clientId)
+
+    if (!client) return response.notFound({ message: 'Client not found' })
+
+    const data = request.only(['name', 'cpf', 'address'])
+
+    const cpfAlreadyUsed = await Client.findBy('cpf', data.cpf)
+
+    if (cpfAlreadyUsed && cpfAlreadyUsed.id !== client.id) {
+      return response.badRequest({ message: 'Cpf already in used' })
+    }
+
+    await client.merge(data).save()
+
+    return response.send(client)
   }
 
   /**
