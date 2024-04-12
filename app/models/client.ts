@@ -23,6 +23,6 @@ export default class Client extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   declare updatedAt: DateTime
 
-  @hasMany(() => Sale)
+  @hasMany(() => Sale, { foreignKey: 'clientId' })
   declare sale: HasMany<typeof Sale>
 }

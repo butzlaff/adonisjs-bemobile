@@ -1,5 +1,7 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+import Sale from './sale.js'
 
 export default class Product extends BaseModel {
   @column({ isPrimary: true })
@@ -17,12 +19,12 @@ export default class Product extends BaseModel {
   @column()
   declare image: string
 
-  @column()
-  declare stock: number
-
   @column.dateTime({ autoCreate: true, serializeAs: null })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   declare updatedAt: DateTime
+
+  @manyToMany(() => Sale, { pivotTable: 'sale_products' })
+  declare sale: ManyToMany<typeof Sale>
 }
