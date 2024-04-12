@@ -19,18 +19,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column({ serializeAs: null })
   declare password: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   declare updatedAt: DateTime | null
-
-  // static accessTokens = DbAccessTokensProvider.forModel(User)
-
-  // @beforeSave()
-  // static async hashPassword(user: User) {
-  //   if (user.$dirty.password) {
-  //     user.password = await hash.make(user.password)
-  //   }
-  // }
 }

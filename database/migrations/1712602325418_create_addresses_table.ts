@@ -9,6 +9,13 @@ export default class extends BaseSchema {
       table.string('street').notNullable()
       table.string('district').notNullable()
       table.integer('address_number').notNullable()
+      table
+        .integer('client_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('clients')
+        .onDelete('CASCADE')
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').notNullable()
     })

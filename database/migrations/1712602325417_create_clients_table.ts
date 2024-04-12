@@ -7,15 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').notNullable()
       table.string('name').notNullable()
-      table.string('email').notNullable()
-      table
-        .integer('address_id')
-        .notNullable()
-        .unsigned()
-        .references('id')
-        .inTable('addresses')
-        .onDelete('CASCADE')
-      table.string('cpf').notNullable()
+      table.string('cpf').notNullable().unique().checkLength('=', 11)
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').notNullable()
     })
