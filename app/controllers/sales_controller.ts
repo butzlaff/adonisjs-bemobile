@@ -1,3 +1,4 @@
+import Sale from '#models/sale'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SalesController {
@@ -5,7 +6,8 @@ export default class SalesController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    return 'ok'
+    const sales = await Sale.query().preload('products')
+    return sales
   }
 
   /**
@@ -19,7 +21,8 @@ export default class SalesController {
    * Show individual record
    */
   async show({ params }: HttpContext) {
-    return { params }
+    const sale = await Sale.query().preload('products').where('id', params.id)
+    return sale
   }
 
   /**

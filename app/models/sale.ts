@@ -8,15 +8,15 @@ export default class Sale extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @hasOne(() => Client)
+  @hasOne(() => Client, { serializeAs: 'client' })
   @column()
-  declare client: HasOne<typeof Client>
+  declare clientId: HasOne<typeof Client>
 
-  @hasMany(() => SaleProduct)
+  @hasMany(() => SaleProduct, { serializeAs: 'products' })
   @column()
   declare products: HasMany<typeof SaleProduct>
 
-  @column.dateTime({ autoCreate: true, serializeAs: null })
+  @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })

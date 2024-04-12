@@ -6,7 +6,7 @@ export default class ProductsController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    const products = await Product.all()
+    const products = await Product.query().orderBy('name', 'asc')
     return products
   }
 

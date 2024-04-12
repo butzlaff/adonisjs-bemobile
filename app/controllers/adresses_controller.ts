@@ -13,7 +13,7 @@ export default class AdressesController {
    * Handle form submission for the create action
    */
   async store({ request }: HttpContext) {
-    const adress = request.only(['street', 'district', 'adressNumber'])
+    const adress = request.only(['street', 'district', 'addressNumber', 'clientId'])
     const newAdress = await Address.create(adress)
     return newAdress
   }
