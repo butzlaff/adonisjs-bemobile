@@ -1,9 +1,8 @@
 import User from '#models/user'
-import { UserService } from '#services/user_service'
+import { createUserValidator, updateUserValidator } from '#validators/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class UsersController {
-  private userService = new UserService()
   /**
    * Display a list of resource
    */
@@ -15,21 +14,14 @@ export default class UsersController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const { email, password } = request.only(['email', 'password'])
+    const body = request.only(['email', 'password'])
+    const payload = await createUserValidator.validate(body)
 
-    const userDataValidate = this.userService.validateEmail(email)
-    if (userDataValidate === false) {
-      return response.badRequest({ message: 'E-mail is not a valid e-mail' })
-    }
-
-    const userAlreadExist = await User.findBy('email', email)
+    const userAlreadExist = await User.findBy('email', payload.email)
     if (userAlreadExist) {
       return response.conflict({ message: 'User already exists' })
     }
-    const user = await User.create({
-      email,
-      password,
-    })
+    const user = await User.create(payload)
     return response.created(user)
   }
 
@@ -52,19 +44,15 @@ export default class UsersController {
     if (!user) return response.notFound({ message: 'User not found' })
 
     const body = request.only(['email', 'password'])
+    const payload = await updateUserValidator.validate(body)
 
-    const userDataValidate = this.userService.validateEmail(body.email)
-    if (userDataValidate === false) {
-      return response.badRequest({ message: 'E-mail is not a valid e-mail' })
-    }
-
-    const userAlreadExist = await User.findBy('email', body.email)
+    const userAlreadExist = await User.findBy('email', payload.email)
 
     if (userAlreadExist && userAlreadExist.id !== userId) {
       return response.conflict({ message: 'User already exists' })
     }
 
-    await user?.merge(body).save()
+    await user?.merge(payload).save()
 
     return response.send(user)
   }
