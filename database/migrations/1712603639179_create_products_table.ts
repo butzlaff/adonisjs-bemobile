@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string('image').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').notNullable()
+      table.timestamp('deleted_at').nullable().defaultTo(null)
     })
   }
 

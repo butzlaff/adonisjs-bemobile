@@ -16,28 +16,21 @@ const ProductsController = () => import('#controllers/products_controller')
 const SalesController = () => import('#controllers/sales_controller')
 
 router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
+  return { status: 'The api are running' }
 })
-
-router
-  .resource('users', UsersController)
-  .except(['create', 'edit'])
-  .use(['index', 'destroy', 'show', 'update'], middleware.auth())
-
 router.post('login', [UsersController, 'login'])
-
-router.resource('clients', ClientsController).except(['create', 'edit'])
-
-router
-  .resource('products', ProductsController)
-  .except(['create', 'edit'])
-  .use('*', middleware.auth())
-
-router.resource('sales', SalesController).except(['create', 'edit']).use('*', middleware.auth())
+router.post('users', [UsersController, 'store'])
 
 router
-  .resource('adresses', AdressesController)
-  .except(['create', 'edit'])
-  .use('*', middleware.auth())
+  .group(() => {
+    router.resource('users', UsersController).except(['create', 'edit', 'store'])
+
+    router.resource('clients', ClientsController).except(['create', 'edit'])
+
+    router.resource('products', ProductsController).except(['create', 'edit'])
+
+    router.resource('sales', SalesController).except(['create', 'edit'])
+
+    router.resource('adresses', AdressesController).except(['create', 'edit'])
+  })
+  .use(middleware.auth())

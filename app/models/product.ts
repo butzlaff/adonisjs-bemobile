@@ -4,6 +4,11 @@ import { DateTime } from 'luxon'
 import Sale from './sale.js'
 
 export default class Product extends BaseModel {
+  async delete() {
+    this.deletedAt = DateTime.local()
+    await this.save()
+  }
+
   @column({ isPrimary: true })
   declare id: number
 
@@ -24,6 +29,9 @@ export default class Product extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   declare updatedAt: DateTime
+
+  @column.dateTime({ serializeAs: null })
+  declare deletedAt: DateTime | null
 
   @manyToMany(() => Sale, { pivotTable: 'sale_products' })
   declare sale: ManyToMany<typeof Sale>
