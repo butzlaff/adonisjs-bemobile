@@ -108,11 +108,7 @@ DB_DATABASE= #NOME DA DATABASE
 
 <h5>Vericação se a API está operacional</h5>
 
-> GET
-
-```sh
-http://localhost:3333
-```
+> GET http://localhost:3333
 
 A resposta da api, se tudo estiver funcionando corretamente:
 
@@ -128,15 +124,13 @@ A resposta da api, se tudo estiver funcionando corretamente:
 
 <h5>Criação de usuário: </h5>
 
-> POST
-
-```sh
-http://localhost:3333/users
-```
+> POST http://localhost:3333/users
 
 A rota espera que no body tenha as seguintes propriedades:
 
 ```json
+// exemplo: http://localhost:3333/users
+
 {
 	"email": "seuemail@seuprovedor.com", // email válido,,
 	"password": string // password
@@ -144,6 +138,8 @@ A rota espera que no body tenha as seguintes propriedades:
 ```
 
 Caso os dados estejam corretos, o retorno da api será:
+
+Resposta: status 201
 
 ```json
 {
@@ -156,25 +152,26 @@ O retorno será sem a senha, por motivos de segurança.
 
 <hr />
 
-<h2>Rotas /login<h2>
+<h2>Rotas /login</h2>
+
 <h5>Login:</h5>
 
-> POST
-
-```sh
-http://localhost:3333/login
-```
+> POST http://localhost:3333/login
 
 A rota espera que no body tenha as seguintes propriedades:
 
 ```json
+// exemplo: http://localhost:3333/login
+
 {
-	"email": "seuemail@seuprovedor.com", // email válido,,
-	"password": string // password
+  "email": "seuemail@seuprovedor.com", // email válido
+  "password": "seupassword"
 }
 ```
 
 Caso os dados estejam corretos, o retorno da api será:
+
+Resposta: status: 200
 
 ```json
 {
@@ -213,13 +210,11 @@ Caso seus dados estejam incorretos:
 
 <h5>Cadastro de Cliente:</h5>
 
-> POST
-
-```sh
-http://localhost:3333/clients
-```
+> POST http://localhost:3333/clients
 
 ```json
+// exemplo: http://localhost:3333/clients
+
 {
   "name": "Cliente Teste",
   "cpf": "12345678900",
@@ -234,7 +229,7 @@ http://localhost:3333/clients
 }
 ```
 
-Retorno:
+Resposta: status: 201
 
 ```json
 {
@@ -248,13 +243,14 @@ Retorno:
 
 <h5>Busca de clientes:</h5>
 
-> GET
+> GET http://localhost:3333/clients
 
-```sh
-http://localhost:3333/clients
-```
+Resposta: status: 200
 
 ```json
+// exemplo: http://localhost:3333/clients
+
+
 [
   {
     "id": 1,
@@ -277,11 +273,7 @@ http://localhost:3333/clients
 
 <h5>Busca de clientes por um ID:</h5>
 
-> GET
-
-```sh
-http://localhost:3333/clients/:id
-```
+> GET http://localhost:3333/clients/:id
 
 ```json
 // exemplo: http://localhost:3333/clients/1
@@ -335,10 +327,10 @@ exemplo: http://localhost:3333/clients/1?year=2024&mouth=04
 
 <h5>Exclusão de um Cliente:</h5>
 
-> DELETE
+> DELETE http://localhost:3333/clients/:id
 
 ```json
-// exemplo http://localhost:3333/clients/:id
+// exemplo http://localhost:3333/clients/1
 
 Não é necessário enviar um body.
 ```
@@ -353,7 +345,7 @@ Resposta: status: 204
 
 <h5>Atualização de um Cliente:</h5>
 
-> PUT (UPDATE)
+> PUT (UPDATE) http://localhost:3333/clients/:id
 
 ```json
 // exemplo http://localhost:3333/clients/1
@@ -369,17 +361,69 @@ Resposta: status: 204
 
 <hr />
 
-<h2>Rotas /products
+<h5>Atualização do endereço de um cliente:</h5>
 
-<h5>Busca de todos produtos:<h5>
+> PUT http://localhost:3333/clients/:id/addresses
 
-> GET
+> Não é necessário o envio de todos os campos abaixo, caso deseje atualizar somente a rua, poderá enviar somente o campo "street", e assim por diante.
+
+```json
+// exemplo: http://localhost:3333/clients/1/addresses
+{
+  "street": "Rua Nova do Cliente 1",
+  "district": "Bairro Novo do Cliente 1",
+  "addressNumber": 200
+}
+```
+
+Resposta: status: 200
+
+```json
+{
+  "id": 1,
+  "street": "Rua Nova do Cliente 1",
+  "district": "Bairro Novo do Cliente 1",
+  "addressNumber": 200
+}
+```
+
+<hr />
+
+<h5>Atualização do telefone de um cliente:</h5>
+
+> PUT http://localhost:3333/clients/:id/telephone
+
+> Não é necessário o envio de todos os campos abaixo, caso deseje atualizar somente a rua, poderá enviar somente o campo "street", e assim por diante.
+
+```json
+// exemplo: http://localhost:3333/clients/1/telephone
+{
+  "number": "99-99999-9999"
+}
+```
+
+Resposta: status: 200
+
+```json
+{
+	"id": 1,
+	"number": "99-99999-9999"
+}
+```
+
+<hr />>
+
+<h2>Rotas /products</h2>
+
+<h5>Busca de todos produtos:</h5>
+
+> GET http://localhost:3333/products/
 
 ```json
 // exemplo: http://localhost:3333/products/
 ```
 
-Retorno: status: 200
+Resposta: status: 200
 
 ```json
 [
@@ -417,7 +461,7 @@ Retorno: status: 200
 
 <hr />
 
-<h5>Busca de um produto por ID:<h5>
+<h5>Busca de um produto por ID:</h5>
 
 > GET http://localhost:3333/products/:id
 
@@ -425,7 +469,7 @@ Retorno: status: 200
 // exemplo: http://localhost:3333/products/1
 ```
 
-Retorno: status: 200
+Resposta: status: 200
 
 ```json
 {
@@ -439,7 +483,7 @@ Retorno: status: 200
 
 <hr />
 
-<h5>Cadastrar um produto:<h5>
+<h5>Cadastrar um produto:</h5>
 
 > POST http://localhost:3333/products
 
@@ -456,10 +500,11 @@ Retorno: status: 200
   "description": "lorem ipsum"
 }
 ```
+
 Reposta: status: 201
 
 ```json
-{ 
+{
   "id": 1,
   "name": "Lorem ipsum",
   "image": "https://link_da_imagem",
@@ -467,9 +512,10 @@ Reposta: status: 201
   "description": "lorem ipsum"
 }
 ```
+
 <hr />
 
-<h5>Atualizar um produto:<h5>
+<h5>Atualizar um produto:</h5>
 
 > PUT http://localhost:3333/products/:id
 
@@ -491,7 +537,7 @@ Reposta: status: 201
 Resposta: status: 200
 
 ```json
-{ 
+{
   "id": 1,
   "name": "Lorem ipsum atualizado",
   "image": "https://link_da_imagem_atualizada",
@@ -502,7 +548,7 @@ Resposta: status: 200
 
 <hr />
 
-<h5>Deleção de um produto:<h5>
+<h5>Deleção de um produto:</h5>
 
 > DELETE http://localhost:3333/products/:id
 
@@ -512,11 +558,169 @@ Resposta: status: 200
 
 > A deleção de um produto, diferente da deleção de um cliente, não ocorre via cascade, foi adotado o método conhecido como "Soft delete", que é um método do que permite a exclusão lógica de registros. Em vez de remover o registro fisicamente do banco de dados, adicionamos uma coluna chamada "deleted_at" à tabela, definindo o valor dessa coluna com a data e hora da exclusão. Se o registro não foi deletado, essa coluna contém um valor de null.
 
-Retorno: status: 204
+Resposta: status: 204
 
 > O status 204 não retorna uma mensagem no body! Se utilizarmos aplicativos como Insomnia ou Postman, iremos receber: "No body returned for response"
 
+<hr />
 
+<h2>Rotas /sales</h2>
+
+<h5>Cadastro de vendas a um cliente:</h5>
+
+> POST http://localhost:3333/sales
+
+```json
+// exemplo: http://localhost:3333/sales
+
+// body
+{
+  "name": "Lorem ipsum",
+  "image": "https://link_da_imagem",
+  "price": 100,
+  "description": "lorem ipsum"
+}
+```
+
+Reposta: status: 201
+
+```json
+{
+  "clientId": 1,
+  "products": [
+    {
+      "productId": 1,
+      "quantity": 1,
+      "price": 100
+    },
+    {
+      "productId": 2,
+      "quantity": 2,
+      "price": 100
+    }
+  ]
+}
+```
+
+Resposta: status: 201
+
+```json
+{
+  "id": 1,
+  "totalPrice": "300.00",
+  "clientId": 1,
+  "createdAt": "2024-04-15T18:32:12.000+00:00",
+  "products": [
+    {
+      "id": 1,
+      "name": "Produto 1",
+      "price": "100.00",
+      "description": "Descriçã do Produto 1",
+      "image": "https://link_da_imagem"
+    },
+    {
+      "id": 2,
+      "name": "Produto 2",
+      "price": "100.00",
+      "description": "Descriçã do Produto 2",
+      "image": "https://link_da_imagem"
+    }
+  ]
+}
+```
+
+<hr />
+
+<h5>Busca de todas vendas:</h5>
+
+> GET http://localhost:3333/products/
+
+```json
+// exemplo: http://localhost:3333/products/
+```
+
+Resposta: status: 200
+
+```json
+[
+  {
+    "id": 1,
+    "totalPrice": "300.00",
+    "clientId": 1,
+    "createdAt": "2024-04-15T18:32:12.000+00:00",
+    "products": [
+      {
+        "id": 1,
+        "name": "Produto 1",
+        "price": "100.00",
+        "description": "Descriçã do Produto 1",
+        "image": "https://link_da_imagem"
+      },
+      {
+        "id": 2,
+        "name": "Produto 2",
+        "price": "100.00",
+        "description": "Descriçã do Produto 2",
+        "image": "https://link_da_imagem"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "totalPrice": "100.00",
+    "clientId": 2,
+    "createdAt": "2024-04-15T17:55:58.000+00:00",
+    "products": [
+      {
+        "id": 2,
+        "name": "Produto 2",
+        "price": "100.00",
+        "description": "Descriçã do Produto 2",
+        "image": "https://link_da_imagem"
+      }
+    ]
+  }
+]
+```
+
+<hr />
+
+<h5>Busca de um venda por ID:</h5>
+
+> GET http://localhost:3333/sales/:id
+
+```json
+// exemplo: http://localhost:3333/sales/1
+```
+
+Resposta: status: 200
+
+```json
+{
+  "id": 1,
+  "totalPrice": "300.00",
+  "clientId": 1,
+  "createdAt": "2024-04-15T18:32:12.000+00:00",
+  "products": [
+    {
+      "id": 1,
+      "name": "Produto 1",
+      "price": "100.00",
+      "description": "Descriçã do Produto 1",
+      "image": "https://link_da_imagem"
+    },
+    {
+      "id": 2,
+      "name": "Produto 2",
+      "price": "100.00",
+      "description": "Descriçã do Produto 2",
+      "image": "https://link_da_imagem"
+    }
+  ]
+}
+```
+
+<hr />
 
 ## Contributors
 
