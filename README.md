@@ -104,6 +104,8 @@ DB_PASSWORD= #PASSWORD DO USUÁRIO
 DB_DATABASE= #NOME DA DATABASE
 ```
 
+<hr />
+
 ### OBSERVAÇÕES IMPORTANTES
 
 > Nas rotas GET E DELETE não é necessário o envio de dados no BODY!!!
@@ -116,16 +118,19 @@ Na criação de um Usuário, usando a rota /users não for passado o campo "e-ma
 
 Resposta: status: 422
 
-````json
-  {
-	"errors": [
-		{
-			"message": "The email field must be defined",
-			"rule": "required",
-			"field": "email"
-		}
-	]
+```json
+{
+  "errors": [
+    {
+      "message": "The email field must be defined",
+      "rule": "required",
+      "field": "email"
+    }
+  ]
 }
+```
+
+<hr />
 
 ### ROTAS DAS APLICAÇÃO
 
@@ -139,7 +144,7 @@ A resposta da api, se tudo estiver funcionando corretamente:
 {
   "status": "The api are running"
 }
-````
+```
 
 <hr />
 
