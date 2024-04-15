@@ -140,7 +140,7 @@ http://localhost:3333/users
 
 ```json
 {
-  "email": "seuemail@seuprovedor.com", // email válido,,
+  "email": "seuemail@seuprovedor.com",
   "password": "seupassword"
 }
 ```
@@ -152,7 +152,7 @@ Resposta: status 201
 ```json
 {
   "email": "seuemail@gmail.com",
-  "id": 1 // id
+  "id": 1
 }
 ```
 
@@ -464,10 +464,6 @@ Resposta: status: 200
 http://localhost:3333/products/
 ```
 
-```json
-
-```
-
 Resposta: status: 200
 
 ```json
@@ -514,10 +510,6 @@ Resposta: status: 200
 
 ```
 http://localhost:3333/products/1
-```
-
-```json
-
 ```
 
 Resposta: status: 200
