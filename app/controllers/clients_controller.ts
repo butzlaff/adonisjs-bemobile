@@ -16,28 +16,24 @@ export default class ClientsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    try {
-      const body = request.only(['name', 'cpf', 'address', 'telephone'])
-      const payload = await createClientValidator.validate(body)
-      const newClient = await db.transaction(async (trx) => {
-        const { address, telephone, ...data } = payload
-        const client = new Client()
-        client.useTransaction(trx)
-        client.cpf = data.cpf
-        client.name = data.name
-        await client.save()
+    const body = request.only(['name', 'cpf', 'address', 'telephone'])
+    const payload = await createClientValidator.validate(body)
+    const newClient = await db.transaction(async (trx) => {
+      const { address, telephone, ...data } = payload
+      const client = new Client()
+      client.useTransaction(trx)
+      client.cpf = data.cpf
+      client.name = data.name
+      await client.save()
 
-        if (address) {
-          await client.related('address').create(address)
-        }
-        if (telephone) await client.related('telephone').create(telephone)
-        return client
-      })
+      if (address) {
+        await client.related('address').create(address)
+      }
+      if (telephone) await client.related('telephone').create(telephone)
+      return client
+    })
 
-      return response.created(newClient)
-    } catch (error) {
-      return response.status(500).send({ message: 'Erro ao criar cliente' })
-    }
+    return response.created(newClient)
   }
 
   /**
