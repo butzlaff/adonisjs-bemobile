@@ -287,6 +287,7 @@ http://localhost:3333/clients/:id
 // exemplo: http://localhost:3333/clients/1
 Não é necessário enviar informações no body.
 ```
+
 Resposta: status: 200
 
 ```json
@@ -342,9 +343,15 @@ exemplo: http://localhost:3333/clients/1?year=2024&mouth=04
 Não é necessário enviar um body.
 ```
 
+Resposta: status: 204
+
+> A resposta 204 retorna um "no content", ou seja,
+
 > Este operação excluirá um cliente, e todas as suas vendas, endereço e telefone, ou seja, utiliza o métode de exclusão em cascada.
 
 <hr />
+
+<h5>Atualização de um Cliente:</h5>
 
 > PUT (UPDATE)
 
@@ -371,6 +378,145 @@ Não é necessário enviar um body.
 ```json
 // exemplo: http://localhost:3333/products/
 ```
+
+Retorno: status: 200
+
+```json
+[
+	{
+		"id": 1,
+		"name": "Produto 1",
+		"price": "100.00",
+		"description": "Descrição do Produto 1",
+		"image": "http://link_da_imagem"
+	},
+	{
+		"id": 2,
+		"name": "Produto 2",
+		"price": "100.00",
+		"description": "Descrição do Produto 2",
+		"image": "http://link_da_imagem"
+	},
+	{
+		"id": 3,
+		"name": "Produto 1",
+		"price": "100.00",
+		"description": "Descrição do Produto 3",
+		"image": "http://link_da_imagem"
+	},
+	{
+		"id": 4,
+		"name": "Produto 1",
+		"price": "100.00",
+		"description": "Descrição do Produto 4",
+		"image": "http://link_da_imagem"
+	},
+  ...
+]
+```
+
+<hr />
+
+<h5>Busca de um produto por ID:<h5>
+
+> GET http://localhost:3333/products/:id
+
+```json
+// exemplo: http://localhost:3333/products/1
+```
+
+Retorno: status: 200
+
+```json
+{
+  "id": 1,
+  "name": "Produto 1",
+  "price": "100.00",
+  "description": "Descrição do Produto 1",
+  "image": "http://link_da_imagem"
+}
+```
+
+<hr />
+
+<h5>Cadastrar um produto:<h5>
+
+> POST http://localhost:3333/products
+
+```json
+// exemplo: http://localhost:3333/products
+```
+
+```json
+// body
+{
+  "name": "Lorem ipsum",
+  "image": "https://link_da_imagem",
+  "price": 100,
+  "description": "lorem ipsum"
+}
+```
+Reposta: status: 201
+
+```json
+{ 
+  "id": 1,
+  "name": "Lorem ipsum",
+  "image": "https://link_da_imagem",
+  "price": 100,
+  "description": "lorem ipsum"
+}
+```
+<hr />
+
+<h5>Atualizar um produto:<h5>
+
+> PUT http://localhost:3333/products/:id
+
+```json
+// exemplo: http://localhost:3333/products/1
+```
+
+```json
+// body
+// Não é necessário o envio de todos os campos, mas pelo menos um dos campos deverá ir na requisição:
+{
+  "name": "Lorem ipsum atualizado",
+  "image": "https://link_da_imagem_atualizada",
+  "price": 100,
+  "description": "lorem ipsum atualizada"
+}
+```
+
+Resposta: status: 200
+
+```json
+{ 
+  "id": 1,
+  "name": "Lorem ipsum atualizado",
+  "image": "https://link_da_imagem_atualizada",
+  "price": 100,
+  "description": "lorem ipsum atualizada"
+}
+```
+
+<hr />
+
+<h5>Deleção de um produto:<h5>
+
+> DELETE http://localhost:3333/products/:id
+
+```json
+// exemplo: http://localhost:3333/products/1
+```
+
+> A deleção de um produto, diferente da deleção de um cliente, não ocorre via cascade, foi adotado o método conhecido como "Soft delete", que é um método do que permite a exclusão lógica de registros. Em vez de remover o registro fisicamente do banco de dados, adicionamos uma coluna chamada "deleted_at" à tabela, definindo o valor dessa coluna com a data e hora da exclusão. Se o registro não foi deletado, essa coluna contém um valor de null.
+
+Retorno: status: 204
+
+> O status 204 não retorna uma mensagem no body! Se utilizarmos aplicativos como Insomnia ou Postman, iremos receber: "No body returned for response"
+
+
 
 ## Contributors
 

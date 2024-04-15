@@ -1,5 +1,5 @@
 import Product from '#models/product'
-import { createProductValidator } from '#validators/product'
+import { createProductValidator, updateProductValidator } from '#validators/product'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ProductsController {
@@ -13,6 +13,7 @@ export default class ProductsController {
         { column: 'name', order: 'asc' },
         { column: 'id', order: 'asc' },
       ])
+
     return products
   }
 
@@ -25,6 +26,7 @@ export default class ProductsController {
     const payload = await createProductValidator.validate(body)
 
     const newProduct = await Product.create(payload)
+
     return response.created(newProduct)
   }
 
@@ -35,7 +37,9 @@ export default class ProductsController {
     const productId = Number(params.id)
 
     const product = await Product.query().whereNull('deleted_at').where('id', productId).first()
+
     if (product) return product
+
     return response.notFound({ message: 'Product not found' })
   }
 
@@ -46,11 +50,14 @@ export default class ProductsController {
     const productId = Number(params.id)
 
     const product = await Product.find(productId)
+
     if (!product) return response.notFound({ message: 'User not found' })
 
     const body = request.only(['name', 'price', 'description', 'image', 'stock'])
 
-    await product?.merge(body).save()
+    const payload = await updateProductValidator.validate(body)
+
+    await product?.merge(payload).save()
 
     return response.send(product)
   }
@@ -62,9 +69,11 @@ export default class ProductsController {
     const productId = Number(params.id)
 
     const product = await Product.find(productId)
+
     if (!product) return response.notFound({ message: 'Product not found' })
 
     await product.delete()
+
     return response.noContent()
   }
 }
