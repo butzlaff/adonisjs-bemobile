@@ -1,5 +1,35 @@
 version: '3.1'
 services:
+  backend:
+    container_name: backend
+    build: .
+    ports:
+      - 3333:3333
+    working_dir: /backend
+    command: dev
+    volumes:
+      - ./app:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - TZ=UTC
+      - PORT=3333
+      - HOST=backend
+      - LOG_LEVEL=info
+      - APP_KEY=0zKosWx4BpRIS7-HTin9p2phLNgpuNgV
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=bemobile
+    healthcheck:
+      test: ['CMD', 'lsof', '-t', '-i:3333'] # Caso utilize outra porta interna para o back, altere ela aqui também
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend-mysql-network
   mysql:
     image: mysql:latest
     restart: always
@@ -7,9 +37,13 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bemobile
     ports:
-      - "3306:3306"
+      - '3306:3306'
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost'] # Deve aguardar o banco ficar operacional
+      timeout: 10s
+      retries: 5
     networks:
-      - mysql-network
+      - backend-mysql-network
 networks:
-  mysql-network:
+  backend-mysql-network:
     driver: bridge
