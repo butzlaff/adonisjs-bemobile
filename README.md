@@ -318,7 +318,6 @@ Resposta: status: 200
     "number": "XX-XXXXX-XXXX"
   },
   "sale": [
-    // Vendas para o cliente
     {
       "id": 1,
       "totalPrice": "100.00",
@@ -327,7 +326,7 @@ Resposta: status: 200
         {
           "id": 1,
           "name": "Nome do Produto",
-          "price": "100.00", // preço do produto
+          "price": "100.00",
           "description": "Descricao do Produto",
           "image": "https://image-do-produto"
         }
