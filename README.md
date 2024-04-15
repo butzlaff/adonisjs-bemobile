@@ -108,6 +108,25 @@ DB_DATABASE= #NOME DA DATABASE
 
 > Nas rotas GET E DELETE não é necessário o envio de dados no BODY!!!
 
+> Se na criação não forem passados os dados requeridos, a aplicação retornará um JSON com a informação dos campos que não foram corretos:
+
+<p>Examplo:</p>
+
+Na criação de um Usuário, usando a rota /users não for passado o campo "e-mail"
+
+Resposta: status: 422
+
+````json
+  {
+	"errors": [
+		{
+			"message": "The email field must be defined",
+			"rule": "required",
+			"field": "email"
+		}
+	]
+}
+
 ### ROTAS DAS APLICAÇÃO
 
 <h5>Vericação se a API está operacional</h5>
@@ -120,7 +139,7 @@ A resposta da api, se tudo estiver funcionando corretamente:
 {
   "status": "The api are running"
 }
-```
+````
 
 <hr />
 

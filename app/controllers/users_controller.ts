@@ -15,6 +15,7 @@ export default class UsersController {
    */
   async store({ request, response }: HttpContext) {
     const body = request.only(['email', 'password'])
+
     const payload = await createUserValidator.validate(body)
 
     const userAlreadExist = await User.findBy('email', payload.email)
@@ -39,17 +40,22 @@ export default class UsersController {
    * Handle form submission for the edit action
    */
   async update({ params, request, response }: HttpContext) {
-    const userId = Number(params.id)
-    const user = await User.find(userId)
-    if (!user) return response.notFound({ message: 'User not found' })
-
     const body = request.only(['email', 'password'])
+
     const payload = await updateUserValidator.validate(body)
 
-    const userAlreadExist = await User.findBy('email', payload.email)
+    const userId = Number(params.id)
 
-    if (userAlreadExist && userAlreadExist.id !== userId) {
-      return response.conflict({ message: 'User already exists' })
+    const user = await User.find(userId)
+
+    if (!user) return response.notFound({ message: 'User not found' })
+
+    if (payload.email) {
+      const userAlreadExist = await User.findBy('email', payload.email)
+
+      if (userAlreadExist && userAlreadExist.id !== userId) {
+        return response.conflict({ message: 'User already exists' })
+      }
     }
 
     await user?.merge(payload).save()
