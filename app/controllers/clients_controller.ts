@@ -8,7 +8,7 @@ export default class ClientsController {
    * Display a list of resource
    */
   async index({}: HttpContext) {
-    const clients = Client.query().preload('address').orderBy('id', 'asc')
+    const clients = Client.query().preload('address').preload('telephone').orderBy('id', 'asc')
     return clients
   }
 
@@ -16,29 +16,28 @@ export default class ClientsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    // try {
-    const body = request.only(['name', 'cpf', 'address', 'telephone'])
-    const payload = await createClientValidator.validate(body)
-    console.log(payload)
-    const newClient = await db.transaction(async (trx) => {
-      const { address, telephone, ...data } = payload
-      const client = new Client()
-      client.useTransaction(trx)
-      client.cpf = data.cpf
-      client.name = data.name
-      await client.save()
+    try {
+      const body = request.only(['name', 'cpf', 'address', 'telephone'])
+      const payload = await createClientValidator.validate(body)
+      const newClient = await db.transaction(async (trx) => {
+        const { address, telephone, ...data } = payload
+        const client = new Client()
+        client.useTransaction(trx)
+        client.cpf = data.cpf
+        client.name = data.name
+        await client.save()
 
-      if (address) {
-        await client.related('address').create(address)
-      }
-      if (telephone) await client.related('telephone').create(telephone)
-      return client
-    })
+        if (address) {
+          await client.related('address').create(address)
+        }
+        if (telephone) await client.related('telephone').create(telephone)
+        return client
+      })
 
-    return response.created(newClient)
-    // } catch (error) {
-    //   return response.status(500).send({ message: 'Erro ao criar cliente' })
-    // }
+      return response.created(newClient)
+    } catch (error) {
+      return response.status(500).send({ message: 'Erro ao criar cliente' })
+    }
   }
 
   /**
@@ -49,7 +48,8 @@ export default class ClientsController {
 
     const client = await Client.query()
       .where('id', params.id)
-      .preload('address')
+      .preload('address', (columns) => columns.select(['street', 'district', 'addressNumber']))
+      .preload('telephone', (columns) => columns.select('number'))
       .preload('sale', (q) => {
         q.select('*')
         if (month && year) {
@@ -99,5 +99,7 @@ export default class ClientsController {
     if (!client) return response.notFound({ message: 'Client not found' })
 
     await client.delete()
+
+    return response.noContent()
   }
 }

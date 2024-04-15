@@ -38,7 +38,6 @@ export default class SalesController {
 
       return await Sale.query().preload('products').where('id', sale.id).firstOrFail()
     } catch (error) {
-      console.error(error)
       throw new Error('Error to create a sale')
     }
   }

@@ -4,7 +4,6 @@ export const createClientValidator = vine.compile(
   vine.object({
     name: vine.string(),
     cpf: vine.string().fixedLength(11),
-    email: vine.string().email(),
     address: vine.object({
       street: vine.string(),
       district: vine.string(),

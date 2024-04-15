@@ -1,12 +1,12 @@
 ## Projeto Gerenciamento de Vendas!
+
 ## <h2>👋 Hello, I’m @butzlaff</h2>
 
 ## Bem-vindo ao App de Gerenciamento de Vendas!
 
 Este aplicativo, foi desenvolvido usando AdonisJS, para gerencimaneto de vendas.
 Foi utilizado o ORM Lucid, juntamente com o banco de dados Mysql.
-O aplicativo usa JsonWebToken(JWT) como forma de segurança, garantido que o usuário sem o Token apropriado não consiga acessar rotas que privadas.
-
+O aplicativo usa JsonWebToken(JWT) como forma de segurança, garantido que o usuário sem o Token apropriado não consiga acessar rotas que são privadas.
 
 <p>Para inciciar, devemos clonar o repositório em sua máquina, com o comando:
 
@@ -16,16 +16,18 @@ O aplicativo usa JsonWebToken(JWT) como forma de segurança, garantido que o usu
 
 Este projeto utiliza docker para facilitar o uso:
 
-> Nota: Você precisá instalar o banco de dados, existe um docker-compose usando Postgres, caso não tenha familiaridade com o Docker, poderá ler sua documentação no site: 
+> Nota: Você precisá instalar o banco de dados, existe um docker-compose usando Postgres, caso não tenha familiaridade com o Docker, poderá ler sua documentação no site:
 
-><a href="https://docs.docker.com">Documentação Docker</a>
+> <a href="https://docs.docker.com">Documentação Docker</a>
 
 Ou copiando o link abaixo:
 
 ```sh
 https://docs.docker.com
 ```
+
 Caso já tenha instalado em sua máquina poderá inciar pelo comando:
+
 ```sh
 docker compose up -d
 ```
@@ -36,7 +38,9 @@ docker compose up -d
 ```sh
 node ace migration:run
 ```
+
 Feito isso, poderemos então utilizar a aplicação pelo docker:
+
 > Lembrando que o back-end usa a porta 3333 por padrão, lembre-se de deixá-la utilizável
 
 Caso queiram usar a aplicação sem o docker, também é possível, e precisaremos instalar o Nodejs para isso.
@@ -46,6 +50,7 @@ Caso queiram usar a aplicação sem o docker, também é possível, e precisarem
 ```sh
 https://nodejs.org/
 ```
+
 Terminada a instalação vamos verificar se ele funciona corretamente:
 
 No terminal do seu sistema operacional vamos testar:
@@ -55,6 +60,7 @@ node -v
 nvm -v
 npm -v
 ```
+
 Caso a instalação esteja correta, deverá aparecer as versões dos seguintes componentes:
 
 ```
@@ -65,11 +71,306 @@ NPM (Node Package Manager): O comando npm -v mostrará a versão do Node Package
 
 Terminada as verificações vamos instalar as dependências:
 Vamos acessar a pasta raiz do projeto e executar o seguinte comando:
+
 > A pasta raiz é onde se encontra o arquivo package.json
+
 ```sh
 npm install
 ```
 
+Após isso, precisaremos do Mysql instalado, poderemos encontrar a instalação dele no seguinte site:
+
+```sh
+https://www.mysql.com/
+```
+
+ou podemos utilizar o docker para isso, como já mensionado anteriormente.
+
+Será necessário também criar um arquivo chamado ".env" na raiz do projeto, e preencher as informações com o bando de dados:
+
+```sh
+TZ=UTC
+PORT=3333
+HOST=localhost
+LOG_LEVEL=info
+APP_KEY=0zKosWx4BpRIS7-HTin9p2phLNgpuNgV
+NODE_ENV=development
+
+# Altere as informações abaixo com os dados da sua conexão do Mysql.
+DB_HOST= # IP DO HOST DO MYSQL
+DB_PORT=3306 # (A porta 3306 é a porta padrão)
+DB_USER= #Usuário (Geralmente root)
+DB_PASSWORD= #PASSWORD DO USUÁRIO
+DB_DATABASE= #NOME DA DATABASE
+```
+
+### ROTAS DAS APLICAÇÃO
+
+<h5>Vericação se a API está operacional</h5>
+
+> GET
+
+```sh
+http://localhost:3333
+```
+
+A resposta da api, se tudo estiver funcionando corretamente:
+
+```json
+{
+  "status": "The api are running"
+}
+```
+
+<hr />
+
+<h2>Rotas /users</h2>
+
+<h5>Criação de usuário: </h5>
+
+> POST
+
+```sh
+http://localhost:3333/users
+```
+
+A rota espera que no body tenha as seguintes propriedades:
+
+```json
+{
+	"email": "seuemail@seuprovedor.com", // email válido,,
+	"password": string // password
+}
+```
+
+Caso os dados estejam corretos, o retorno da api será:
+
+```json
+{
+  "email": "seuemail@gmail.com",
+  "id": 1 // id
+}
+```
+
+O retorno será sem a senha, por motivos de segurança.
+
+<hr />
+
+<h2>Rotas /login<h2>
+<h5>Login:</h5>
+
+> POST
+
+```sh
+http://localhost:3333/login
+```
+
+A rota espera que no body tenha as seguintes propriedades:
+
+```json
+{
+	"email": "seuemail@seuprovedor.com", // email válido,,
+	"password": string // password
+}
+```
+
+Caso os dados estejam corretos, o retorno da api será:
+
+```json
+{
+  "type": "bearer",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxMzA2MDczN30.hUFKE8Y1eKlGWRMsQjUNvhFg_Wy1gpgm3upERuwjhxk"
+}
+```
+
+Caso seus dados estejam incorretos:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Invalid user credentials"
+    }
+  ]
+}
+```
+
+<hr />
+
+> Todas as futuras rotas irão usar o token da resposta do login para autenticação
+
+```ts
+{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+}
+```
+
+<hr />
+
+<h2>Rotas /clients</h2>
+
+<h5>Cadastro de Cliente:</h5>
+
+> POST
+
+```sh
+http://localhost:3333/clients
+```
+
+```json
+{
+  "name": "Cliente Teste",
+  "cpf": "12345678900",
+  "address": {
+    "street": "Rua do Cliente",
+    "district": "Bairro do Cliente",
+    "addressNumber": 1
+  },
+  "telephone": {
+    "number": "01-12345-1234"
+  }
+}
+```
+
+Retorno:
+
+```json
+{
+  "name": "Cliente Teste",
+  "cpf": "12345678900",
+  "id": 1
+}
+```
+
+<hr />
+
+<h5>Busca de clientes:</h5>
+
+> GET
+
+```sh
+http://localhost:3333/clients
+```
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cliente Teste",
+    "cpf": "12345678900",
+    "address": {
+      "id": 1,
+      "street": "Rua do Cliente",
+      "district": "Bairro do Cliente",
+      "addressNumber": 1
+    },
+    "telephone": {
+      "id": 1,
+      "number": "XX-XXXXX-XXXX"
+    }
+  }
+  ...
+]
+```
+
+<h5>Busca de clientes por um ID:</h5>
+
+> GET
+
+```sh
+http://localhost:3333/clients/:id
+```
+
+```json
+// exemplo: http://localhost:3333/clients/1
+Não é necessário enviar informações no body.
+```
+Resposta: status: 200
+
+```json
+{
+  "id": 1,
+  "name": "Cliente Teste",
+  "cpf": "12345678900",
+  "address": {
+    "street": "Rua do Cliente",
+    "district": "Bairro do Cliente",
+    "addressNumber": 1
+  },
+  "telephone": {
+    "number": "XX-XXXXX-XXXX"
+  },
+  "sale": [
+    // Vendas para o cliente
+    {
+      "id": 1,
+      "totalPrice": "100.00",
+      "clientId": 1,
+      "products": [
+        {
+          "id": 1,
+          "name": "Nome do Produto",
+          "price": "100.00", // preço do produto
+          "description": "Descricao do Produto",
+          "image": "https://image-do-produto"
+        }
+      ]
+    }
+  ]
+}
+```
+
+> A rota Get clients/:id, também aceita Query Parameters
+
+```sh
+exemplo: http://localhost:3333/clients/1?year=2024&mouth=04
+```
+
+> Estes paramêtros filtram o campo "sale' da busca do cliente, retornando somente as vendas por mês e ano que específicos, trazendo as vendas mais recentes para mais antigas.
+
+<hr />
+
+<h5>Exclusão de um Cliente:</h5>
+
+> DELETE
+
+```json
+// exemplo http://localhost:3333/clients/:id
+
+Não é necessário enviar um body.
+```
+
+> Este operação excluirá um cliente, e todas as suas vendas, endereço e telefone, ou seja, utiliza o métode de exclusão em cascada.
+
+<hr />
+
+> PUT (UPDATE)
+
+```json
+// exemplo http://localhost:3333/clients/1
+
+// body
+{
+  "name": "Nome do Cliente",
+  "cpf": "11111111112" // cpf do cliente, 11 digitos
+}
+```
+
+> Este operação atualiza os dados principais do cliente(Cpf ou email).
+
+<hr />
+
+<h2>Rotas /products
+
+<h5>Busca de todos produtos:<h5>
+
+> GET
+
+```json
+// exemplo: http://localhost:3333/products/
+```
 
 ## Contributors
 
