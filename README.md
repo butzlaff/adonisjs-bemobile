@@ -1,5 +1,18 @@
-## Projeto Gerenciador de produtos
+## Projeto Gerenciamento de Vendas!
 ## <h2>👋 Hello, I’m @butzlaff</h2>
+
+## Bem-vindo ao App de Gerenciamento de Vendas!
+
+Este aplicativo, foi desenvolvido usando AdonisJS, para gerencimaneto de vendas.
+Foi utilizado o ORM Lucid, juntamente com o banco de dados Mysql.
+O aplicativo usa JsonWebToken(JWT) como forma de segurança, garantido que o usuário sem o Token apropriado não consiga acessar rotas que privadas.
+
+
+<p>Para inciciar, devemos clonar o repositório em sua máquina, com o comando:
+
+```sh
+ git clone git@github.com:butzlaff/adonisjs-bemobile.git
+```
 
 Este projeto utiliza docker para facilitar o uso:
 
@@ -18,18 +31,45 @@ docker compose up -d
 ```
 
 > O código será executado automaticamente no docker.
-> Caso queira rodar localmente talves seja necessário mudar algumas configurações, e como estamos utilizando Lucid como ORM, precisaremos inicar as configurações do Sequelize, o comando para rodar localmente é:
+> Porém, como estamos utilizando o ORM Lucid, precisaremos executar as migrations:
 
 ```sh
-npm run prestart ou npm run db:reset
+node ace migration:run
 ```
-Feito isso, poderemos então inicar a aplicação:
-> Lembrando que o back-end usa a porta 3001 por padrão, lembre-se de deixá-la utilizável
+Feito isso, poderemos então utilizar a aplicação pelo docker:
+> Lembrando que o back-end usa a porta 3333 por padrão, lembre-se de deixá-la utilizável
 
-Então podemos entrar nas pastas: backend & frontend e utilizar o comando:
+Caso queiram usar a aplicação sem o docker, também é possível, e precisaremos instalar o Nodejs para isso.
+
+> A instalação e documentação do Nodejs pode ser encontrada no site:
+
 ```sh
-npm run dev
+https://nodejs.org/
 ```
+Terminada a instalação vamos verificar se ele funciona corretamente:
+
+No terminal do seu sistema operacional vamos testar:
+
+```sh
+node -v
+nvm -v
+npm -v
+```
+Caso a instalação esteja correta, deverá aparecer as versões dos seguintes componentes:
+
+```
+Node.js: O comando node -v mostrará a versão do Node.js instalada no seu sistema.
+NVM (Node Version Manager): O comando nvm -v mostrará a versão do Node Version Manager, que é usado para gerenciar múltiplas versões do Node.js em um mesmo sistema.
+NPM (Node Package Manager): O comando npm -v mostrará a versão do Node Package Manager, que é utilizado para instalar e gerenciar pacotes do Node.js.
+```
+
+Terminada as verificações vamos instalar as dependências:
+Vamos acessar a pasta raiz do projeto e executar o seguinte comando:
+> A pasta raiz é onde se encontra o arquivo package.json
+```sh
+npm install
+```
+
 
 ## Contributors
 
