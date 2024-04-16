@@ -86,7 +86,7 @@ https://www.mysql.com/
 
 ou podemos utilizar o docker para isso, como já mensionado anteriormente.
 
-Será necessário também criar um arquivo chamado ".env" na raiz do projeto, e preencher as informações com o bando de dados:
+Será necessário também criar um arquivo chamado ".env" na raiz do projeto, e preencher as informações com o banco de dados:
 
 ```sh
 TZ=UTC
@@ -112,7 +112,7 @@ DB_DATABASE= #NOME DA DATABASE
 
 > Se na criação não forem passados os dados requeridos, a aplicação retornará um JSON com a informação dos campos que não foram corretos:
 
-<p>Examplo:</p>
+<p>Exemplo:</p>
 
 Na criação de um Usuário, usando a rota /users não for passado o campo "e-mail"
 
