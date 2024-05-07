@@ -59,7 +59,7 @@
     "@vinejs/vine": "^1.8.0",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
-    "mysql2": "^3.9.3",
+    "mysql2": "^3.9.7",
     "reflect-metadata": "^0.2.1"
   },
   "eslintConfig": {
