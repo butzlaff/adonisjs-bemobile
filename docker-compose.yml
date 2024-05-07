@@ -1,4 +1,4 @@
-version: '3.1'
+name: bemobile
 services:
   backend:
     container_name: backend
@@ -44,6 +44,9 @@ services:
       retries: 5
     networks:
       - backend-mysql-network
+    volumes:
+      # adiciona scripts SQL para serem executados ao iniciar a DB
+      - ./sql:/docker-entrypoint-initdb.d
 networks:
   backend-mysql-network:
     driver: bridge

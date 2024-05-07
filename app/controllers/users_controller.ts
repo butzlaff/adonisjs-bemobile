@@ -85,6 +85,6 @@ export default class UsersController {
       const token = auth.use('jwt').generate(user)
       return token
     }
-    return response.send({ error: 'Invalid credentials' })
+    return response.unauthorized({ error: 'Invalid credentials' })
   }
 }
