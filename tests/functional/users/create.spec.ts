@@ -48,4 +48,16 @@ test.group('Users create', () => {
       ],
     })
   })
+
+  test('Should not create a User if e-mail already exists', async ({ client }) => {
+    const response = await client.post('/users').json({
+      email: 'user_valid@test.com',
+      password: '123456',
+    })
+
+    response.assertStatus(409)
+    response.assertBodyContains({
+      message: 'User already exists',
+    })
+  })
 })
